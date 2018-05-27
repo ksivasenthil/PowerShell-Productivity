@@ -25,25 +25,24 @@ Function Save-Screenshot {
     [CmdletBinding()]
     Param(
         [Parameter(
-            Mandatory=$False,
-            ValueFromPipelineByPropertyName=$True,
-            HelpMessage="Give the directory where you would want the screenshot image files to be saved. `
+            Mandatory = $False,
+            ValueFromPipelineByPropertyName = $True,
+            HelpMessage = "Give the directory where you would want the screenshot image files to be saved. `
                             Defaults to Screenshot directory within the UserProfile directory."
         )]
         [String]
         $Path = "$($env:USERPROFILE)\Screenshots"
     )
     
-    $directoryExists = Test-Path -Path $Path;
-    if(-not($directoryExists)){
-        New-Item -Path "Path" -ItemType Directory;    }
+    New-Item -Path $Path -ItemType Directory -Force;
     $screenShot = Get-Clipboard -Format Image;
-    if($null -ne $screenShot) {
+    if ($null -ne $screenShot) {
         $fileName = Get-Date -Format "dd-MM-yyyy-HH-mm-ss-fff";
         $fileName = "$Path\$fileName.png"
         $screenShot.Save($fileName, "png");
         Write-Host "Clipboard image saved!";
-    } else {
+    }
+    else {
         Write-Host "Clipboard devoid of image";
     }
 }
