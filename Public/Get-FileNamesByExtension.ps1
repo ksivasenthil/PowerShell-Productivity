@@ -2,10 +2,10 @@
     .SYNOPSIS
     Lists all the files with a specific extension in the path you asked the command to search inside.
     .DESCRIPTION
-    File extensions that this Cmdlet can operate is limited to cs, vb, py, and csproj. 
+    File extensions that this Cmdlet can operate is limited to cs, vb, py, csproj, and js. 
     The reason for this limitation is the subsequent use of which for the time being will be built only for those file types.
     .PARAMETER Extension
-    Optional in nature, file extension which you want to be listed. It should one of the cs, vb, py, or csproj. Defaults to cs.
+    Optional in nature, file extension which you want to be listed. It should one of the cs, vb, py, csproj or js. Defaults to cs.
     Only one file extension can be used with the Cmdlet.
     .PARAMETER OutputPropertyName
     Optional in nature, you specify the name of the property which you will get as output from this Cmdlet. 
@@ -32,9 +32,9 @@ Function Get-FileNamesByExtension {
             Mandatory=$false,
             ValueFromPipelineByPropertyName=$true,
             HelpMessage="Give one of the extension string which will be used to search. `
-                        Extensions are limited to cs, vb, py, csproj. Defaults to cs"
+                        Extensions are limited to cs, vb, py, csproj, js. Defaults to cs"
         )]
-        [ValidateSet("cs", "vb", "py", "csproj")]
+        [ValidateSet("cs", "vb", "py", "csproj", "js")]
         [Alias("ex")]
         [String]
         $Extension="cs",
