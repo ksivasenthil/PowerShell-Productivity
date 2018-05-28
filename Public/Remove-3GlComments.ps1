@@ -12,24 +12,15 @@ Function Remove-3GlComments {
         $SingleLine,
 
         [String]
-        $OutputParameterName1="SourceFile",
+        $OutputParameterName="SourceFile",
 
         [String]
-        $OutputParameterName2="UncommentedFile",
-        
-        [String]
-        $Path <#,
+        $Path,
 
         [String]
-        $CommentToken #>
+        $CommentToken
     )
     Process{
-        (Get-Content -Path $Path) -replace "\/\/" | Out-File "$Path.uncommented";
-        return @(
-            [PSCustomObject]@{
-                $($OutputParameterName1) = $Path;
-                $($OutputParameterName2) = $("$Path.uncommented")
-            }
-        );
+        Write-Output ((Get-Content -Path $Path) -replace [regex]::Escape($CommentToken));
     }
 }
