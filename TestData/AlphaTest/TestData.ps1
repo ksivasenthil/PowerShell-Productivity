@@ -7,20 +7,42 @@ $FileList = @(
     }
 );
 $FileListWithUncommentedFiles = @(
-    [PSCustomObject]@{
-        SourceFile = "HelloWorld.js";
-        UncommentedFile = "HelloWorld.js.uncommented"
+    @{
+        "Path" = "HelloWorld.js";
+        "CommentToken" = "//"
     }
 );
-$SingleLineFileContentWithComment= @"
+$SingleLineCommentFileContent1= @"
                                     //This is Hello World comment;
                                     function HelloWorld() {
                                         //No ref;
                                     }
 "@;
+$SingleLineCommentFileContent2= @"
+                                    //This is Hello//World comment;
+                                    function HelloWorld() {
+                                        //No ref;
+                                    }
+"@;
 
-$SingleLineFileContentWithNoComment=@"
+$NoCommentFileContent=@"
                                     function HelloWorld() {
 
                                     }
+"@;
+
+$MultiLineCommentFileConent1=@"
+                                /*This is Hello World comment;
+                                Spanning multiple lines */
+                                function HelloWorld() {
+                                    //No ref;
+                                }
+"@;
+
+$MultiLineCommentFileConent2=@"
+                                /*This is Hello World comment;
+                                * Spanning multiple lines */
+                                function HelloWorld() {
+                                    //No ref;
+                                }
 "@;
