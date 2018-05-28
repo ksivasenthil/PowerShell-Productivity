@@ -47,3 +47,23 @@ Describe "Get-FileNamessByExtension" {
 
     Assert-VerifiableMocks;
 }
+
+Describe "Remove-3GlComments" {
+    It "Given only required parameters, it strips comments out of the file" -TestCases $FileListWithUncommentedFiles {
+        param($Path, $CommentToken) 
+        Mock Get-Content -Verifiable -MockWith {return $SingleLineCommentFileContent1}
+        Remove-3GlComments -Path $Path -CommentToken $CommentToken | Should Not Match [regex]::Escape($CommentToken);
+    }
+    It "Given only required parameters, it strips comments out of the file even when the comment token is repeated in the same line" -TestCases $FileListWithUncommentedFiles {
+        param($Path, $CommentToken) 
+        Mock Get-Content -Verifiable -MockWith {return $SingleLineCommentFileContent2}
+        Remove-3GlComments -Path $Path -CommentToken $CommentToken | Should Not Match [regex]::Escape($CommentToken);
+    }
+    It "Given only requierd parameters, it returns the content as-is if it did not contain comment." -TestCases $FileListWithUncommentedFiles {
+        param($Path, $CommentToken) 
+        Mock Get-Content -Verifiable -MockWith {return $NoCommentFileContent}
+        (Remove-3GlComments -Path $Path -CommentToken $CommentToken) -join [System.Environment]::NewLine -replace "`r`n$", ""| Should Be $NoCommentFileContent;
+    }
+    Assert-VerifiableMocks
+
+}
