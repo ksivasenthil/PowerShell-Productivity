@@ -11,15 +11,27 @@ Function Remove-3GlComments {
         [Switch]
         $SingleLine,
 
+        [Parameter(
+            ValueFromPipelineByPropertyName=$True
+        )]
         [String]
-        $OutputParameterName1="SourceFile",
+        $OutputParameterName1="Path",
 
+        [Parameter(
+            ValueFromPipelineByPropertyName=$True
+        )]
         [String]
         $OutputParameterName2="Content",
 
+        [Parameter(
+            ValueFromPipelineByPropertyName=$True
+        )]
         [String]
         $Path,
 
+        [Parameter(
+            ValueFromPipelineByPropertyName=$True
+        )]
         [String]
         $CommentToken
 
