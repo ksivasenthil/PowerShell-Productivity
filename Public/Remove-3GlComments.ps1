@@ -38,8 +38,8 @@ Function Remove-3GlComments {
     )
     Process{
         Write-Output ((Get-Content -Path $Path) `
-                        -replace [regex]::Escape($CommentToken) `
-                        | `
+                        -replace $CommentToken `
+                    | `
                     Select-Object -Property `
                     @{
                         n="$OutputParameterName1";
