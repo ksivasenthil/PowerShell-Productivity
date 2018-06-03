@@ -49,20 +49,44 @@ Describe "Get-FileNamessByExtension" {
 }
 
 Describe "Remove-3GlComments" {
-    It "Given only required parameters, it strips comments out of the file" -TestCases $FileListWithUncommentedFiles {
+    It "Given only required parameters, it strips comments out of the file" -TestCases $FileListWithSingleLineCommented {
         param($Path, $CommentToken) 
         Mock Get-Content -Verifiable -MockWith {return $SingleLineCommentFileContent1}
         Remove-3GlComments -Path $Path -CommentToken $CommentToken | Should Not Match [regex]::Escape($CommentToken);
     }
-    It "Given only required parameters, it strips comments out of the file even when the comment token is repeated in the same line" -TestCases $FileListWithUncommentedFiles {
+    It "Given only required parameters, it strips comments out of the file even when the comment token is repeated in the same line" `
+        -TestCases $FileListWithSingleLineCommented {
         param($Path, $CommentToken) 
         Mock Get-Content -Verifiable -MockWith {return $SingleLineCommentFileContent2}
         Remove-3GlComments -Path $Path -CommentToken $CommentToken | Should Not Match [regex]::Escape($CommentToken);
     }
-    It "Given only requierd parameters, it returns the content as-is if it did not contain comment." -TestCases $FileListWithUncommentedFiles {
+    It "Given only requierd parameters, it returns the content as-is if it did not contain comment." `
+        -TestCases $FileListWithSingleLineCommented {
         param($Path, $CommentToken) 
         Mock Get-Content -Verifiable -MockWith {return $NoCommentFileContent}
         (Remove-3GlComments -Path $Path -CommentToken $CommentToken) -join [System.Environment]::NewLine -replace "`r`n$", ""| Should Be $NoCommentFileContent;
+    }
+    It "Given only required parameters, it returns the content with multiple line of comment block removed" `
+        -TestCases $FileListWithMultipleLineCommented {
+        param($Path, $CommentToken)
+        Mock Get-Content -Verifiable -MockWith {return $MultiLineCommentFileConent1; }
+        (Remove-3GlComments -Path $Path -CommentToken $CommentToken) | Should Not Match [regex]::Escape($CommentToken);
+    }
+    It "Given only required parameters, it returns the content with multiple line of comment block removed even when it contains the \* character inside the comment block." `
+        -TestCases $FileListWithMultipleLineCommented {
+        param($Path, $CommentToken)
+        Mock Get-Content -Verifiable -MockWith {return $MultiLineCommentFileConent2; }
+        (Remove-3GlComments -Path $Path -CommentToken $CommentToken) | Should Not Match [regex]::Escape($CommentToken);
+    }
+    It "Given only required parameters, it could be piped with both single and multiple comment block." {
+        Mock Get-Content -Verifiable -MockWith {return $MultiLineCommentFileConent2; }
+        $result  = (Remove-3GlComments -Path $FileListWithSingleLineCommented[0].Path`
+                                         -CommentToken $FileListWithSingleLineCommented[0].CommentToken`
+                                         | `
+                    Remove-3GlComments -Path $FileListWithMultipleLineCommented[0].Path`
+                                         -CommentToken $FileListWithMultipleLineCommented[0].CommentToken)
+        $result | Should Not Match [regex]::Escape($FileListWithSingleLineCommented[0].CommentToken);
+        $result | Should Not Match [regex]::Escape($FileListWithMultipleLineCommented[0].CommentToken);
     }
     Assert-VerifiableMocks
 

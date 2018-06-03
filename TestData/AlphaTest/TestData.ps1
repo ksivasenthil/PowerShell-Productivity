@@ -6,10 +6,16 @@ $FileList = @(
         FullName = "HelloWorld.py"
     }
 );
-$FileListWithUncommentedFiles = @(
+$FileListWithSingleLineCommented = @(
     @{
         "Path" = "HelloWorld.js";
-        "CommentToken" = "//"
+        "CommentToken" = "//(.*)?\r?\n"
+    }
+);
+$FileListWithMultipleLineCommented = @(
+    @{
+        "Path" = "HelloWorld.js";
+        "CommentToken" = "/\*(.*)?\*/"
     }
 );
 $SingleLineCommentFileContent1= @"
