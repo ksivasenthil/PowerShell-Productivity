@@ -12,15 +12,30 @@ Function Remove-3GlComments {
         $SingleLine,
 
         [String]
-        $OutputParameterName="SourceFile",
+        $OutputParameterName1="SourceFile",
+
+        [String]
+        $OutputParameterName2="Content",
 
         [String]
         $Path,
 
         [String]
         $CommentToken
+
     )
     Process{
-        Write-Output ((Get-Content -Path $Path) -replace [regex]::Escape($CommentToken));
+        Write-Output ((Get-Content -Path $Path) `
+                        -replace [regex]::Escape($CommentToken) `
+                        | `
+                    Select-Object -Property `
+                    @{
+                        n="$OutputParameterName1";
+                        e={$Path}
+                    },
+                    @{
+                        n="$OutputParameterName2";
+                        e={$_}
+                    });
     }
 }
