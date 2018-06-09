@@ -6,6 +6,7 @@ $PublicScripts = @(Get-ChildItem -Path "$PSScriptRoot\Public\*.ps1" -ErrorAction
 $PrivateScripts = @(Get-ChildItem -Path "$PSScriptRoot\Private\*.ps1" -ErrorAction SilentlyContinue);
 
 ForEach($folder in @($PublicScripts, $PrivateScripts)){
+    if($folder -match "*.Tests.ps1$") { continue;}
     Try{
         . $folder.FullName;
     }
