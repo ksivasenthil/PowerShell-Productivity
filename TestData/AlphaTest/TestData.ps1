@@ -15,7 +15,7 @@ $FileListWithSingleLineCommented = @(
 $FileListWithMultipleLineCommented = @(
     @{
         "Path" = "HelloWorld.js";
-        "CommentToken" = "/\*(.*)?\*/"
+        "CommentToken" = "(?s)/\*(.*)?\*/"
     }
 );
 $SingleLineCommentFileContent1= @"
