@@ -25,6 +25,7 @@ Describe "Remove-3GlComments tests" {
             };
             Remove-3GlComments -Path $Path `
                 -CommentToken $CommentToken `
+                -UsePath `
                 | `
                 Select-Object -ExpandProperty "Content" `
                 | `
@@ -40,6 +41,7 @@ Describe "Remove-3GlComments tests" {
             };
             Remove-3GlComments -Path $Path `
                 -CommentToken $CommentToken `
+                -UsePath `
                 | `
                 Select-Object -ExpandProperty "Content" `
                 | `
@@ -55,6 +57,7 @@ Describe "Remove-3GlComments tests" {
             };
             (Remove-3GlComments -Path $Path `
                     -CommentToken $CommentToken `
+                    -UsePath `
                     | `
                     Select-Object -ExpandProperty "Content" `
             ) `
@@ -84,6 +87,7 @@ Describe "Remove-3GlComments tests" {
         #>
             Remove-3GlComments -Path $Path `
                 -CommentToken $CommentToken `
+                -UsePath `
                 | `
                 Select-Object -ExpandProperty "Content" `
                 | `
@@ -100,6 +104,7 @@ Describe "Remove-3GlComments tests" {
             };
             Remove-3GlComments -Path $Path `
                 -CommentToken $CommentToken `
+                -UsePath `
                 | `
                 Select-Object -ExpandProperty "Content" `
                 | `
@@ -116,8 +121,9 @@ Describe "Remove-3GlComments tests" {
             {
                 return $MultiLineCommentFileConent2; 
             };
-            $result = (Remove-3GlComments -Path $FileListWithSingleLineCommented[0].Path`
-                    -CommentToken $FileListWithSingleLineCommented[0].CommentToken`
+            $result = (Remove-3GlComments -Path $FileListWithSingleLineCommented[0].Path `
+                    -CommentToken $FileListWithSingleLineCommented[0].CommentToken `
+                    -UsePath `
                     | `
                     Remove-3GlComments -CommentToken $FileListWithMultipleLineCommented[0].CommentToken)
             $result | Should Not Match $FileListWithSingleLineCommented[0].CommentToken;
