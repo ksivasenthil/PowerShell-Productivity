@@ -1,53 +1,97 @@
 <#
     .SYNOPSIS
     .DESCRIPTION
-    .PARAMETER
+    .PARAMETER SingleLine
+    .PARAMETER UsePath
+    .PARAMETER OutputParameterName1
+    .PARAMETER OutputParameterName2
+    .PARAMETER Path
+    .PARAMETER Content
+    .PARAMETER CommentToken
     .EXAMPLE
-    .NOTE
+    .NOTES
 #>
 Function Remove-3GlComments {
     [CmdletBinding()]
     Param(
+        [Parameter(
+            Mandatory = $False
+        )]
         [Switch]
         $SingleLine,
+        
+        [Parameter(
+            Mandatory = $False
+        )]
+        [Switch]
+        $UsePath,
 
         [Parameter(
-            ValueFromPipelineByPropertyName=$True
+            Mandatory = $False,
+            ValueFromPipelineByPropertyName = $True
         )]
         [String]
-        $OutputParameterName1="Path",
+        $OutputParameterName1 = "Path",
 
         [Parameter(
-            ValueFromPipelineByPropertyName=$True
+            Mandatory = $False,
+            ValueFromPipelineByPropertyName = $True
         )]
         [String]
-        $OutputParameterName2="Content",
+        $OutputParameterName2 = "Content",
 
         [Parameter(
-            ValueFromPipelineByPropertyName=$True
+            Mandatory = $False,
+            ValueFromPipelineByPropertyName = $True
         )]
         [String]
         $Path,
 
         [Parameter(
-            ValueFromPipelineByPropertyName=$True
+            Mandatory = $False
+        )]
+        [String]
+        $Content,
+        
+        [Parameter(
+            Mandatory = $False,
+            ValueFromPipelineByPropertyName = $True
         )]
         [String]
         $CommentToken
 
     )
-    Process{
-        Write-Output ((Get-Content -Path $Path) `
-                        -replace $CommentToken `
+    Process {
+        if ($UsePath) {
+            Write-Output ((Get-Content -Path $Path `
+                        -Raw:$SingleLine
+                ) `
+                    -replace $CommentToken, ""`
                     | `
                     Select-Object -Property `
-                    @{
-                        n="$OutputParameterName1";
-                        e={$Path}
-                    },
-                    @{
-                        n="$OutputParameterName2";
-                        e={$_}
-                    });
+                @{
+                    n = "$OutputParameterName1";
+                    e = {$Path}
+                },
+                @{
+                    n = "$OutputParameterName2";
+                    e = {$_}
+                });
+        }
+        else {
+            Write-Output ($Content `
+                    -replace $CommentToken, ""`
+                    | `
+                    Select-Object -Property `
+                @{
+                    n = "$OutputParameterName1";
+                    e = {$Path}
+                },
+                @{
+                    n = "$OutputParameterName2";
+                    e = {$_}
+                });
+        }
+        
     }
 }
