@@ -124,6 +124,7 @@ Describe "Remove-3GlComments tests" {
             $result = (Remove-3GlComments -Path $FileListWithSingleLineCommented[0].Path `
                     -CommentToken $FileListWithSingleLineCommented[0].CommentToken `
                     -UsePath `
+                    -SingleLine `
                     | `
                     Remove-3GlComments -CommentToken $FileListWithMultipleLineCommented[0].CommentToken)
             $result | Should Not Match $FileListWithSingleLineCommented[0].CommentToken;
