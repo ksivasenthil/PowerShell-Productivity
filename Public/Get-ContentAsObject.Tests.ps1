@@ -14,16 +14,8 @@ Get-ChildItem -Path $TestDataDirectory `
 
 Describe "Get-ContentAsObject" {
     Context "Given a file path" {
-        Mock Get-Content `
-            -Verifiable `
-            -ParameterFilter {
-            $Path -ne "foo"
-        } `
-            -MockWith {
-            return "$TestDataDirectory\VanillaFile.txt";
-        };
         It "Should read the content and yield one line at a time" {
-            Get-ContentAsObject -Path . `
+            Get-ContentAsObject -Path "$TestDataDirectory\VanillaFile.txt" `
                 | `
                 Measure-Object `
                 | `
@@ -44,38 +36,40 @@ Describe "Get-ContentAsObject" {
         It "Should allow customization of output property names" {
             $result = Get-ContentAsObject -OutputPropertyName1 "File" `
                 -OutputPropertyName2 "Line" `
-                -Path . `
+                -Path "$TestDataDirectory\VanillaFile.txt" `
                 | `
-                Select-Object -Property PSCustomObject `
+                Get-Member `
                 | `
-                Select-Object -ExpandProperty Properties;
-            $result[0] | Should Be "File";
-            $result[1] | Should Be "Line";
+                Where-Object {$_.MemberType -eq "NoteProperty"};
+            $result[0] | Select-Object -ExpandProperty Name | Should Be "File";
+            $result[1] | Select-Object -ExpandProperty Name |  Should Be "Line";
 
         }
 
         It "Should report error if reading non-ASCII files" {
-            Mock Get-Content -Verifiable `
-                -MockWith {
-                return "$TestDataDirectory\EncodingModifiedFile.txt";
-            }
-            #Check the BOM of file by reading it as byte stream.
+            Get-Content -Path "$TestDataDirectory\EncodingModifiedFile.txt" | Should Throw;
         }
-        Assert-VerifiableMock;
     }
 
     Context "Given a file path and switch to read all content at once" {
-        Mock Get-Content -Verifiable `
-            -MockWith {
-            return "$TestDataDirectory\EolModifiedFile.txt"
-        }
         It "Should read the content and yield a string" {
-
+            Get-ContentAsObject -Path "$TestDataDirectory\VanillaFile.txt" `
+                -AsSingleLine `
+                | `
+                Measure-Object `
+                | `
+                Select-Object -ExpandProperty Count `
+                | `
+                Should BeExactly 1;
         }
 
         It "Should preserve the new line characters when read as single string" {
-            #Need some research on how to assert this!!
+            Get-ContentAsObject -Path "$TestDataDirectory\EolModifiedFile.txt" `
+                -AsSingleLine `
+                | `
+                Select-Object -ExpandProperty Content `
+                | `
+                Should Match "(?sm)\r\n$";
         }
-        Assert-VerifiableMock;
     }
 }
