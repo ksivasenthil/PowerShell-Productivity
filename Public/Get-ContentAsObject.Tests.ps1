@@ -54,7 +54,7 @@ Describe "Get-ContentAsObject" {
     Context "Given a file path and switch to read all content at once" {
         It "Should read the content and yield a string" {
             Get-ContentAsObject -Path "$TestDataDirectory\VanillaFile.txt" `
-                -AsSingleLine `
+                -AsString `
                 | `
                 Measure-Object `
                 | `
@@ -65,7 +65,7 @@ Describe "Get-ContentAsObject" {
 
         It "Should preserve the new line characters when read as single string" {
             Get-ContentAsObject -Path "$TestDataDirectory\EolModifiedFile.txt" `
-                -AsSingleLine `
+                -AsString `
                 | `
                 Select-Object -ExpandProperty Content `
                 | `
